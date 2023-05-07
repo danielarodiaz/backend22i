@@ -50,7 +50,7 @@ class Server {
   }
   //Nos creamos una funcion xq necesito escuchar el puerto
   listen() {
-    this.app.listen(this.PORT, () => {
+    this.app.listen(this.port, () => {
       //console.log("Server Online port 8080"); //Mensaje que vamos a recibir cuando estemos escuchando el puerto 8080
       console.log("Server Online port: ", this.port);
       //console.log(process.env); //Acceso a los procesos de mi servidor y lo muestra en consola cuando ejecuamos node index.js
