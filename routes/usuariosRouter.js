@@ -1,7 +1,11 @@
 const { Router } = require("express"); //Nos permite hacer el ruteo. Router es un metodo
 const { check } = require("express-validator"); //Nos permitira chekear segun el campo que queremos validar
 const { validarCampos } = require("../middlewares/validar_campos");
-const { esRolValido, emailExiste } = require("../helpers/db_validators");
+const {
+  esRolValido,
+  emailExiste,
+  usuarioExiste,
+} = require("../helpers/db_validators");
 const {
   usuariosGet,
   usuariosPost,
@@ -39,8 +43,25 @@ router.post(
 ); //Los datos entre la direccion y la funcion son los midlewers, check (nombre del campo (exactante igual), y mensaje para el front) .notEmpty es el metodo que verifica la validacion, se fija que no sea vacio.
 
 //Peticion que nos permite actualizar un registro en un bd con su /:id
-router.put("/:id", usuariosPut);
+router.put(
+  "/:id",
+  [
+    check("id", "No es un ID valido").isMongoId(),
+    check("id").custom(usuarioExiste),
+    check("rol").custom(esRolValido),
+    validarCampos, //agregamos esto xq es la funcion que toma los errores y los muestra, IMP, despues de cada uno de los check
+  ],
+  usuariosPut
+);
 
-router.delete("/:id", usuariosDelete);
+router.delete(
+  "/:id",
+  [
+    check("id", "No es un ID valido").isMongoId(),
+    check("id").custom(usuarioExiste),
+    validarCampos,
+  ],
+  usuariosDelete
+);
 
 module.exports = router;
