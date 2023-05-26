@@ -14,7 +14,7 @@ const esRolValido = async (rol) => {
 
 //verificar el correo
 const emailExiste = async (correo) => {
-  const existeEmail = await Usuario.findOne({ correo }); //findOne es un metodo de los modelos es como el find de los array
+  const existeEmail = await Usuario.findOne({ correo }); //findOne es un metodo de los modelos es como el find de los array. Para hacer esta busqueda antes debo importar el modelo Usuario.
   if (existeEmail) {
     throw new Error(`El correo ${correo} ya se encuentra en la base de datos`);
   }

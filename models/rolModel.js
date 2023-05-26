@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require("mongoose"); //Los schemas son creados y son los mismos que estan en la bd (Mongo db)
 
 const RolSchema = Schema({
   rol: {

@@ -40,7 +40,8 @@ const UsuarioSchema = Schema({
 
 //quitar datos en la respuesta json
 UsuarioSchema.methods.toJSON = function () {
-  const { __v, password, ...usuario } = this.toObject(); //esto hace referencia al objeto que crearemos con este modelo ; ...usuario traemos todo lo de usuario menos __v y password
+  const { __v, password, _id, ...usuario } = this.toObject(); //esto hace referencia al objeto que crearemos con este modelo ; ...usuario traemos todo lo de usuario menos __v y password
+  usuario.uid = _id; //Le cambiamos el nombre de como viene predeterminado _id
   return usuario;
 };
 

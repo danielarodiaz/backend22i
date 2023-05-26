@@ -12,8 +12,8 @@ const usuariosGet = async (req = request, res = response) => {
   // const total = await Usuario.countDocuments(); //contame todos los doc que haya, osea la cant de registros
   //Desestructuro un arreglo, esto nos sirve para que la respuesta sea mas rapida si es que tenemos muchos registros esto lo vemos a la par del status 200 de la resp
   const [total, usuarios] = await Promise.all([
-    Usuario.countDocuments(query),
-    Usuario.find(query).skip(from).limit(limit),
+    Usuario.countDocuments(query), //en total se guarda lo que resuelve esta promesa,
+    Usuario.find(query).skip(from).limit(limit), //se guarda en usuarios
   ]); //Promise.all = que haga todas las promesas,arreglo de promesas, en este caso resuelve ambas promesas
   res.json({
     usuarios,
@@ -39,7 +39,7 @@ const usuariosPost = async (req = request, res = response) => {
   //Antes de guardar en la bd, hacer:
 
   //Esto esta en db_validators donde tiene que estar
-  // //1.verificar el correo
+  // //1.verificar el correo,luego esto lo hacemos desde db_validator
   // const existeEmail = await Usuario.findOne({ correo }); //findOne es un metodo de los modelos es como el find de los array
   // if (existeEmail) {
   //   return res.status(400).json({
@@ -70,15 +70,15 @@ const usuariosPost = async (req = request, res = response) => {
 const usuariosPut = async (req = request, res = response) => {
   const { id } = req.params; //request tiene una funcion llamada params que trae todos los parametros que manda desde la raiz, obtenemos el id
   //obtener datos a actualizar
-  const { password, correo, ...resto } = req.body; //datos que manda el front por eso body. Sacamos password y correo e ...resto es lo que queda del objeto
+  const { password, correo, ...resto } = req.body; //datos que manda el front por eso body. Sacamos password y correo y ...resto es lo que queda del objeto. Con put puedo actualizar cualquier dato que quiera modificar, solo coloco la propiedad y el nuevo valor a actualizar de esa propiedad.
   //Si actualizo el password debo cifrarlo o encriptarlo
   if (password) {
     //preg si viene password primero
     const salt = bcrypt.genSaltSync(10);
-    resto.password = bcrypt.hashSync(password, salt); //Ponemos la nueva password, creamos de nuevo la prop password
+    resto.password = bcrypt.hashSync(password, salt); //Ponemos la nueva password, creamos de nuevo la prop password xq la quitamos anteriormente.
   }
   //buscar el usuario y actualizarlo
-  const usuario = await Usuario.findByIdAndUpdate(id, resto, { new: true }); //new:true lo que hace es que una vez que lo actualice, guarde los datos en la variable usuario actualizado
+  const usuario = await Usuario.findByIdAndUpdate(id, resto, { new: true }); //new:true lo que hace es que una vez que lo actualice, guarde los datos en la variable usuario actualizado. Busca el usuario por el id y lo actualiza en resto.
   res.json({
     mensaje: "Usuario actualizado",
     usuario,
@@ -87,6 +87,8 @@ const usuariosPut = async (req = request, res = response) => {
 
 const usuariosDelete = async (req = request, res = response) => {
   const { id } = req.params;
+
+  const usuarioAutenticado = req.usuario; //req.usuario fue la que obtuve al validar el token
   //para eliminar el registro
   // const usuarioBorrado = await Usuario.findByIdAndDelete(id); //No es buena practica esto xq generalmente no se borra nada de la bd, solo se inactiva!
 
@@ -98,14 +100,15 @@ const usuariosDelete = async (req = request, res = response) => {
     });
   }
   const usuarioInactivado = await Usuario.findByIdAndUpdate(
-    id,
-    { estado: false },
+    id, //id del registro que modificaremos
+    { estado: false }, //valor a modificar
     { new: true }
   ); //con { estado: false } inactivamos el usuario cambiando su estado a false
   res.json({
     mensaje: "Usuario borrado",
     //usuarioBorrado,
     usuarioInactivado,
+    usuarioAutenticado,
   });
 };
 

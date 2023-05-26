@@ -12,6 +12,8 @@ const {
   usuariosPut,
   usuariosDelete,
 } = require("../controllers/usuariosController");
+const { validarJWT } = require("../middlewares/validar-jwt");
+const { esAdminRole } = require("../middlewares/validar-roles");
 
 const router = Router(); // nos creamos una const router para manejar todas las funciones que tiene el meotod Router y lo voy llamando por ejemplo en router.get, router.post, etc
 // router.get("/", function (req, res) {
@@ -46,6 +48,7 @@ router.post(
 router.put(
   "/:id",
   [
+    validarJWT, //siempre esto xq este tiene el usuario autenticado con el token
     check("id", "No es un ID valido").isMongoId(),
     check("id").custom(usuarioExiste),
     check("rol").custom(esRolValido),
@@ -57,6 +60,8 @@ router.put(
 router.delete(
   "/:id",
   [
+    validarJWT,
+    esAdminRole,
     check("id", "No es un ID valido").isMongoId(),
     check("id").custom(usuarioExiste),
     validarCampos,
