@@ -2,16 +2,16 @@ const { Router } = require("express"); //Nos permite hacer el ruteo. Router es u
 const { check } = require("express-validator"); //Nos permitira chekear segun el campo que queremos validar
 const { validarCampos } = require("../middlewares/validar_campos");
 const {
-  esRolValido,
-  emailExiste,
-  usuarioExiste,
-} = require("../helpers/db_validators");
-const {
   usuariosGet,
   usuariosPost,
   usuariosPut,
   usuariosDelete,
 } = require("../controllers/usuariosController");
+const {
+  esRolValido,
+  emailExiste,
+  usuarioExiste,
+} = require("../helpers/db_validators");
 const { validarJWT } = require("../middlewares/validar-jwt");
 const { esAdminRole } = require("../middlewares/validar-roles");
 
