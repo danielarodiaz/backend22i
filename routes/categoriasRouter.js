@@ -11,6 +11,7 @@ const {
   actualizarCategoria,
   borrarCategoria,
 } = require("../controllers/categoriasController");
+const { categoriaExiste } = require("../helpers/db_validators");
 
 const router = Router();
 router.get("/", [validarJWT], obtenerCategorias); //traigo todas las categorias y para que pueda ver las categorias debera estar logueado y por eso validamos el JWT
@@ -20,6 +21,7 @@ router.get(
     validarJWT,
     check("id", "No es un ID valido").isMongoId(),
     //validar si existe una categoria con ese id xq puede ser que sea un id valido pero que no exista una categoria con ese id
+    check("id").custom(categoriaExiste),
     validarCampos,
   ],
   obtenerCategoria
@@ -41,6 +43,7 @@ router.put(
     esAdminRole,
     check("id", "No es un ID valido").isMongoId(),
     check("nombre", "El nombre es obligatorio").notEmpty(),
+    check("id").custom(categoriaExiste),
     validarCampos,
   ],
   actualizarCategoria
@@ -51,6 +54,7 @@ router.delete(
     validarJWT,
     esAdminRole,
     check("id", "No es un ID valido").isMongoId(),
+    check("id").custom(categoriaExiste),
     validarCampos,
   ],
   borrarCategoria

@@ -12,6 +12,8 @@ class Server {
     this.authPath = "/api/auth"; //1er paso para la autenticacion de usuario
     this.usuariosPath = "/api/usuarios"; //usuariosPath es solo un nombre
     this.categoriasPath = "/api/categorias";
+    this.cursosPath = "/api/cursos";
+    this.buscarPath = "/api/buscar";
     //CONECTAR CON BASE DE DATOS
     this.conectarDB();
 
@@ -42,6 +44,8 @@ class Server {
     this.app.use(this.authPath, require("../routes/authRouter")); //2do paso para la autenticacion de usuario
     this.app.use(this.usuariosPath, require("../routes/usuariosRouter")); //Creamos esto para que sea mas mantenible. Definimos cual sera la ruta que el cliente va a llamar, el archivo donde estaran todas las rutas. use.(seria como middlewars de la ruta) ; this.usuariosPath definido dentro de la clase server. Y lo que hara sera, fijarse que peticion pide el usuario, va al archivo usuarios.js y se fija de acuerdo a la peticion que hizo el usuario y lo ejecuta.
     this.app.use(this.categoriasPath, require("../routes/categoriasRouter"));
+    this.app.use(this.cursosPath, require("../routes/cursosRouter"));
+    this.app.use(this.buscarPath, require("../routes/buscarRouter"));
 
     //Manejara todas las rutas donde va a solicitar info nuestro servidor
     // this.app.get("/api/usuarios", function (req, res) {

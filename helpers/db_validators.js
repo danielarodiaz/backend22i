@@ -1,5 +1,6 @@
 //Funciones que nos permitiran validar datos antes de guardar en la bd
 //Debo importar el modelo que voy a validar
+const Categoria = require("../models/categoriaModel");
 const Rol = require("../models/rolModel");
 const Usuario = require("../models/usuariosModel");
 //validar rol
@@ -21,10 +22,34 @@ const emailExiste = async (correo) => {
 };
 //si existe el usuario por id
 const usuarioExiste = async (id) => {
-  const existeUsuario = await Usuario.findById(id);
+  const existeUsuario = await Categoria.findById(id);
   if (!existeUsuario) {
     throw new Error(`El ID ${id} no se encuentra en la base de datos`);
   }
 };
 
-module.exports = { esRolValido, emailExiste, usuarioExiste };
+//si existe el categoria por id
+const categoriaExiste = async (id) => {
+  const existeCategoria = await Categoria.findById(id);
+  if (!existeCategoria) {
+    throw new Error(
+      `El ID ${id} no corresponde a ninguna categoria registrada en la base de datos`
+    );
+  }
+};
+const cursoExiste = async (id) => {
+  const existeCurso = await Curso.findById(id);
+  if (!existeCurso) {
+    throw new Error(
+      `El ID ${id} no corresponde a ninguna curso registrado en la base de datos`
+    );
+  }
+};
+
+module.exports = {
+  esRolValido,
+  emailExiste,
+  usuarioExiste,
+  categoriaExiste,
+  cursoExiste,
+};
